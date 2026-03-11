@@ -220,7 +220,7 @@ WORKBOOK_TEMPLATE = """
 
     .order-chunk { margin-bottom: 10px; padding-left: 5px; line-height: ___CONFIG_LH_CHUNK___; }
     .summary-sentence-box { border: 2px solid var(--c-accent); border-radius: 8px; padding: 10px; background-color: #e0f2f1; margin-top: 10px; font-weight: 600; color: #004d40; }
-    .para-mark { color: var(--c-brand); font-weight: 900; margin-right: 4px; font-family: 'Montserrat'; font-size: 1.1em; }
+    .para-mark { color: var(--c-brand); font-weight: 900; margin-right: 4px; font-family: 'Noto Sans KR', 'Montserrat', sans-serif; font-size: 1.1em; }
 
     .right-col { flex: 0.75; display: flex; flex-direction: column; height: 100%; gap: 8px; }
     .secret-note { flex: 1; border: 1px solid var(--c-gray-line); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
@@ -251,6 +251,7 @@ WORKBOOK_TEMPLATE = """
     .opt-item-wrapper { margin-bottom: 4px; display: flex; flex-direction: column; gap: 3px; }
     .opt-item-wrapper:last-child { margin-bottom: 0; }
     .opt-row { display: block; font-size: 12.5px; color: #000000; line-height: 1.4; font-family: 'KoPub Batang', 'KoPubBatang', serif; }
+    .circle-num { font-family: 'Noto Sans KR', sans-serif; }
     .opt-row:hover { color: var(--c-brand); font-weight: 700; cursor: pointer; }
 
     .why-card { background-color: #f8f9fa; border: 1px solid #eceff1; border-left: 4px solid #cfd8dc; border-radius: 6px; padding: 3px 8px; display: flex; align-items: center; gap: 8px; margin-left: 2px; min-height: 20px;}
@@ -751,7 +752,7 @@ def generate_unit_pages(json_data_str, is_teacher):
             for idx, opt in enumerate(opts):
                 if is_insertion_prob:
                     opt = re.sub(r'^\s*\(\s*([①-⑤])\s*\)', r'\1', opt)
-                    opt = re.sub(r'^\s*([①-⑤])', r'( \1 )', opt)
+                    opt = re.sub(r'^\s*([①-⑤])', r'( <span class="circle-num">\1</span> )', opt)
 
                 is_correct = False
                 if len(raw_options_visual) == 1:
@@ -781,7 +782,7 @@ def generate_unit_pages(json_data_str, is_teacher):
         for idx, opt in enumerate(options):
             if is_insertion_prob:
                 opt = re.sub(r'^\s*\(\s*([①-⑤])\s*\)', r'\1', opt)
-                opt = re.sub(r'^\s*([①-⑤])', r'( \1 )', opt)
+                opt = re.sub(r'^\s*([①-⑤])', r'( <span class="circle-num">\1</span> )', opt)
 
             is_correct = (is_teacher and (idx + 1) == main_correct_ans_num)
             opt_style = ' style="color:#d32f2f; font-weight:900;"' if is_correct else ''
@@ -1699,7 +1700,7 @@ def generate_presentation_pages(json_data_str, unit_num, badge_text, cover_title
             for idx, opt in enumerate(opts):
                 if is_insertion_prob:
                     opt = re.sub(r'^\s*\(\s*([①-⑤])\s*\)', r'\1', opt)
-                    opt = re.sub(r'^\s*([①-⑤])', r'( \1 )', opt)
+                    opt = re.sub(r'^\s*([①-⑤])', r'( <span class="circle-num">\1</span> )', opt)
                 is_correct = ((idx + 1) == main_correct_ans_num)
                 opt_style = ' style="font-size: 15px; line-height: 2.8; color: #000000;'
                 if is_correct: opt_style += ' color:#d32f2f; font-weight:900;'
@@ -1712,7 +1713,7 @@ def generate_presentation_pages(json_data_str, unit_num, badge_text, cover_title
         for idx, opt in enumerate(options):
             if is_insertion_prob:
                 opt = re.sub(r'^\s*\(\s*([①-⑤])\s*\)', r'\1', opt)
-                opt = re.sub(r'^\s*([①-⑤])', r'( \1 )', opt)
+                opt = re.sub(r'^\s*([①-⑤])', r'( <span class="circle-num">\1</span> )', opt)
             is_correct = ((idx + 1) == main_correct_ans_num)
             opt_style = ' style="font-size: 15px; line-height: 2.8; color: #000000;'
             if is_correct: opt_style += ' color:#d32f2f; font-weight:900;'
