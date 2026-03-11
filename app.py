@@ -14,12 +14,10 @@ import base64
 # ==========================================
 @st.cache_resource
 def install_playwright_browser():
-    try:
-        from playwright.sync_api import sync_playwright
-        with sync_playwright() as p:
-            p.chromium.launch(headless=True).close()
-    except Exception:
-        subprocess.run(["playwright", "install", "chromium"], check=True)
+    subprocess.run(
+        ["python", "-m", "playwright", "install", "--with-deps", "chromium"],
+        check=True
+    )
 
 install_playwright_browser()
 

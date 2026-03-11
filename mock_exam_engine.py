@@ -76,29 +76,41 @@ def save_html_to_pdf(html_content, output_pdf_path):
     :param output_pdf_path: 저장될 PDF 파일의 경로 및 이름 (예: 'output.pdf')
     """
     with sync_playwright() as p:
-        # 백그라운드(Headless) 모드로 크롬 브라우저 실행
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-setuid-sandbox"])
         page = browser.new_page()
+        page.set_content(html_content, wait_until="networkidle", timeout=60000)
 
-        # 브라우저 페이지에 HTML 내용 삽입
-        page.set_content(html_content)
+        # 웹 폰트 강제 로딩 대기 (각 폰트를 명시적으로 load 요청)
+        font_status = page.evaluate("""
+            () => {
+                const fontFamilies = ['Montserrat', 'Noto Sans KR', 'Noto Serif KR', 'NanumSquareRound', 'KoPub Batang', 'KoPubBatang'];
+                const checks = fontFamilies.map(f =>
+                    document.fonts.load('16px "' + f + '"').then(() => ({family: f, ok: true}))
+                        .catch(() => ({family: f, ok: false}))
+                );
+                return Promise.all(checks).then(results => {
+                    return document.fonts.ready.then(() => {
+                        const failed = results.filter(r => !r.ok).map(r => r.family);
+                        return { total: document.fonts.size, failed: failed };
+                    });
+                });
+            }
+        """)
 
-        # ⚠️ 중요: 웹 폰트(구글 폰트 등)가 완전히 로드될 때까지 대기하여 폰트 깨짐 방지
-        page.evaluate("document.fonts.ready")
+        # 폰트 렌더링 안정화를 위해 추가 대기
+        page.wait_for_timeout(2000)
 
-        # 수업용 화면의 JS(문장 자르기/가리기)가 모두 실행될 수 있도록 약간 대기
-        page.wait_for_timeout(300)
+        if font_status.get('failed'):
+            print(f"   ⚠️ 폰트 로딩 실패: {', '.join(font_status['failed'])} - PDF에 기본 폰트가 적용될 수 있습니다.")
 
         # A4 사이즈(가로 방향), 배경색 포함, 여백 없이 PDF 저장
         page.pdf(
             path=output_pdf_path,
             format="A4",
-            landscape=True,  # 교재 방향이 가로(landscape)이므로 추가
+            landscape=True,
             print_background=True,
             margin={"top": "0", "right": "0", "bottom": "0", "left": "0"}
         )
-
-        # 브라우저 종료
         browser.close()
 
 
