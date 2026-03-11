@@ -1701,10 +1701,7 @@ def generate_presentation_pages(json_data_str, unit_num, badge_text, cover_title
                 if is_insertion_prob:
                     opt = re.sub(r'^\s*\(\s*([①-⑤])\s*\)', r'\1', opt)
                     opt = re.sub(r'^\s*([①-⑤])', r'( <span class="circle-num">\1</span> )', opt)
-                is_correct = ((idx + 1) == main_correct_ans_num)
-                opt_style = ' style="font-size: 15px; line-height: 2.8; color: #000000;'
-                if is_correct: opt_style += ' color:#d32f2f; font-weight:900;'
-                opt_style += '"'
+                opt_style = ' style="font-size: 15px; line-height: 2.8; color: #000000;"'
                 pres_options_html += f'<div class="opt-item-wrapper" style="margin-bottom: 8px;"><span class="opt-row"{opt_style}>{opt}</span></div>'
             if prob_idx < len(raw_options_visual) - 1:
                 pres_options_html += '<div style="height: 15px;"></div>'
@@ -1714,10 +1711,7 @@ def generate_presentation_pages(json_data_str, unit_num, badge_text, cover_title
             if is_insertion_prob:
                 opt = re.sub(r'^\s*\(\s*([①-⑤])\s*\)', r'\1', opt)
                 opt = re.sub(r'^\s*([①-⑤])', r'( <span class="circle-num">\1</span> )', opt)
-            is_correct = ((idx + 1) == main_correct_ans_num)
-            opt_style = ' style="font-size: 15px; line-height: 2.8; color: #000000;'
-            if is_correct: opt_style += ' color:#d32f2f; font-weight:900;'
-            opt_style += '"'
+            opt_style = ' style="font-size: 15px; line-height: 2.8; color: #000000;"'
             pres_options_html += f'<div class="opt-item-wrapper" style="margin-bottom: 8px;"><span class="opt-row"{opt_style}>{opt}</span></div>'
 
     opt_box = f'<div class="options-box" style="padding: 10px 25px;"><span class="opt-title">▼ CHOICES</span>{pres_options_html}</div>'
